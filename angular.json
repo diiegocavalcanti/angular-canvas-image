@@ -29,7 +29,10 @@
             "styles": [
               "src/styles.scss"
             ],
-            "scripts": [],
+            "scripts": [
+              "./node_modules/fabric/dist/fabric.min.js",
+              "./node_modules/jquery/dist/jquery.js"
+            ],
             "es5BrowserSupport": true
           },
           "configurations": {

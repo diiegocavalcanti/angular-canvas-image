@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import * as $ from 'jquery';
 import { fromEvent, Observable } from 'rxjs';
 import { pairwise, switchMap, takeUntil } from 'rxjs/operators';
 
@@ -40,24 +39,15 @@ export class AppComponent implements OnInit {
   constructor(private http: HttpClient, private satanas: DomSanitizer) { }
 
   public ngOnInit() {
-    // this.canvas = new fabric.Canvas('canvas-fabric', {
-    //   isDrawingMode: true,
-    //   selection: true,
-    //   freeDrawingBrush: 'square'
-    // });
 
-    $('#canvas').on('mouseup', (event) => {
+    const canvas = document.getElementById('canvas') as HTMLCanvasElement;
 
+    fromEvent(canvas, 'mouseup').subscribe((event) => {
       if (this.cPushArray.length === 0) {
         this.cPushArray.push(this.originalFile);
       }
-
-      const canvas = event.target as HTMLCanvasElement;
       const dataURL = canvas.toDataURL();
-
       this.cPushArray.push(dataURL);
-
-      console.log(this.cPushArray);
     });
 
 
@@ -78,8 +68,6 @@ export class AppComponent implements OnInit {
         canvas.width = img.width;
         canvas.height = img.height;
 
-        console.log(img.width);
-        console.log(img.height);
         const ctx = canvas.getContext('2d');
         ctx.drawImage(img, 0, 0);
         const dataURL = canvas.toDataURL('image/png');
@@ -156,7 +144,6 @@ export class AppComponent implements OnInit {
       this.context.lineTo(currentPos.x, currentPos.y);
       this.context.fill();
       this.context.stroke();
-      // this.cPushArray.push(this.context);
     }
   }
 
@@ -213,16 +200,6 @@ export class AppComponent implements OnInit {
 
   }
 
-
-  resizeImg(w, h) {
-    if (w > h) {
-      if (w > this.width) {
-        w = this.width;
-        const prop = (h * 100) / w;
-        h = (w * prop) / 100;
-      }
-    }
-  }
 }
 
 

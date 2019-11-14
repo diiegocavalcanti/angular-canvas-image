@@ -9,14 +9,17 @@
      
 
       <div class="row m-auto">
-        <select class="m-1" id="selColor" [(ngModel)]="pointerColor" name="pointerColor"
+        <!-- <select class="m-1" id="selColor" [(ngModel)]="pointerColor" name="pointerColor"
           (change)="changePointerColor();">
           <option value="#000000">Preto</option>
           <option value="#fff">Branco</option>
           <option value="#1B1BBB" selected>Azul</option>
           <option value="#00CC00">Verde</option>
           <option value="#F0FC00">Amarelo</option>
-        </select>
+        </select> -->
+        <input type="color" id="body" name="body"
+            value="#000000" id="selColor" [(ngModel)]="pointerColor" name="pointerColor"
+            (change)="changePointerColor();">
         <input class="m-1" type="button" (click)="save()" value="Salvar">
         <input class="m-1" type="button" (click)="limpar()" value="Limpar">
         <input class="m-1" type="button" (click)="cUndo()" value="Desfazer" [disabled]="!(cPushArray.length > 0)">

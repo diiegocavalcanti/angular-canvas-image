@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
+import * as $ from 'jquery';
 import { fromEvent, Observable } from 'rxjs';
 import { pairwise, switchMap, takeUntil } from 'rxjs/operators';
 
@@ -34,6 +35,7 @@ export class AppComponent implements OnInit {
   color;
   previousSibling;
   value;
+  originalFile;
 
   constructor(private http: HttpClient, private satanas: DomSanitizer) { }
 
@@ -43,6 +45,20 @@ export class AppComponent implements OnInit {
     //   selection: true,
     //   freeDrawingBrush: 'square'
     // });
+
+    $('#canvas').on('mouseup', (event) => {
+
+      if (this.cPushArray.length === 0) {
+        this.cPushArray.push(this.originalFile);
+      }
+
+      const canvas = event.target as HTMLCanvasElement;
+      const dataURL = canvas.toDataURL();
+
+      this.cPushArray.push(dataURL);
+
+      console.log(this.cPushArray);
+    });
 
 
     this.getImage('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTz4LYX0701zvt_1PuQPnfgAM97G8MbPLO678eZ2A7Uzsaw_5urHA&s')
@@ -67,6 +83,10 @@ export class AppComponent implements OnInit {
         const ctx = canvas.getContext('2d');
         ctx.drawImage(img, 0, 0);
         const dataURL = canvas.toDataURL('image/png');
+
+        if (this.cPushArray.length === 0) {
+          this.originalFile = dataURL;
+        }
         resolve(dataURL.replace(/^data:image\/(png|jpg);base64,/, ''));
       });
     });
@@ -136,13 +156,13 @@ export class AppComponent implements OnInit {
       this.context.lineTo(currentPos.x, currentPos.y);
       this.context.fill();
       this.context.stroke();
-      this.cPushArray.push(this.context);
+      // this.cPushArray.push(this.context);
     }
   }
 
   limpar(): void {
-    this.context = (this.canvas.nativeElement as HTMLCanvasElement).getContext('2d');
-    this.context.getImageData(20, 40, 50, 50);
+    this.loadImage(this.cPushArray[0]);
+    this.cPushArray = [];
 
   }
 
@@ -154,9 +174,11 @@ export class AppComponent implements OnInit {
 
   cUndo() {
     const canvasPic = new Image();
-    canvasPic.src = this.cPushArray[this.cPushArray.length - this.cStep];
-    this.context.drawImage(canvasPic, 2, 2);
-    this.imagem = this.context;
+    const last = this.cPushArray.pop();
+    const pos = (this.cPushArray.length - 1);
+    canvasPic.src = this.cPushArray[pos];
+    this.loadImage(canvasPic.src);
+    // this.imagem = this.context;
   }
 
   onSelectFile(event) {

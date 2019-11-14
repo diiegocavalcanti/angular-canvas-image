@@ -29,7 +29,7 @@
 </form>
 
 
-<img [src]="imageToShow" alt="" id="minhaimg">
+<img *ngFor="let item of cPushArray" [src]="item" alt="" id="minhaimg">
 
 <!-- <img src="SafeValue must use [property]=binding: blob:http://localhost:4200/5e71d342-453b-49cf-bb47-b2fa91f7bfea (see http://g.co/ng/security#xss)"> -->
 
